@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1>Hello, World!</h1>
+<h2>{{ myVar }}</h2>
+<ul>
+  {% for item in myList %}
+  <li>{{ item }}</li>
+  {% endfor %}
+</ul>
+
+<a href="{{ url_for('other') }}" class="btn btn-primary">Go to Other Page</a>
+{% endblock %}
