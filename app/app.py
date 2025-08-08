@@ -1,26 +1,21 @@
-from flask import Flask, render_template
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/')
-
-
-@app.route('/')
-def index():
-    myVar = "heyo, Marc!"
-    myList = [1, 2, 3, 4, 5]
-    return render_template('index.html', myVar=myVar, myList=myList)
+db = SQLAlchemy()
 
 
-@app.route('/other')
-def other():
-    return render_template('other.html')
+def create_app():
+    app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./site.db'
+    
+    db.init_app(app)
+
+    
+    from routes import register_routes
+    register_routes(app, db)
 
 
-@app.template_filter('capitalize')
-def capitalize_filter(s):
-    """Capitalize the first letter of a string."""
-    if isinstance(s, str):
-        return s.capitalize()
-    return s
+    migrate = Migrate(app, db)
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    return app

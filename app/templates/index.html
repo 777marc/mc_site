@@ -1,12 +1,39 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<h1>Hello, World!</h1>
-<h2>{{ myVar }}</h2>
+
+<h1>Index Page</h1>
 <ul>
-  {% for item in myList %}
-  <li>{{ item }}</li>
+  {% for person in people %}
+  <li>
+    {{ person }}
+    <button type="button" onclick="deletePerson('{{ person.pid }}')">
+      Delete
+    </button>
+  </li>
   {% endfor %}
 </ul>
 
-<a href="{{ url_for('other') }}" class="btn btn-primary">Go to Other Page</a>
+<h3>New Person</h3>
+<form method="POST" action="{{ url_for('add_person') }}">
+  <input type="text" name="name" placeholder="Enter name" required />
+  <input type="text" name="age" placeholder="Enter age" />
+  <input type="text" name="job" placeholder="Enter job" />
+  <button type="submit">create</button>
+</form>
+
+<script type="text/javascript">
+  function deletePerson(pid) {
+    if (confirm("Are you sure you want to delete this person?")) {
+      fetch(`/delete/${pid}`, {
+        method: "DELETE",
+      }).then((response) => {
+        if (response.ok) {
+          location.reload();
+        } else {
+          alert("Error deleting person.");
+        }
+      });
+    }
+  }
+</script>
 {% endblock %}
