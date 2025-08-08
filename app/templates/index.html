@@ -9,6 +9,7 @@
     <button type="button" onclick="deletePerson('{{ person.pid }}')">
       Delete
     </button>
+    <a href="{{ url_for('person_details', pid=person.pid) }}">Details</a>
   </li>
   {% endfor %}
 </ul>

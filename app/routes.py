@@ -27,3 +27,10 @@ def register_routes(app, db):
             db.session.delete(person)
             db.session.commit()
         return redirect('/', 204)
+
+    @app.route('/details/<int:pid>')
+    def person_details(pid):
+        person = Person.query.get(pid)
+        if person:
+            return render_template('details.html', person=person)
+        return redirect('/')
