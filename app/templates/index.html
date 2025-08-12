@@ -2,6 +2,7 @@
 %}
 
 <h1>Index Page</h1>
+<p>{{ current_user.username if current_user.is_authenticated else "Guest" }}</p>
 <ul>
   {% for person in people %}
   <li>
