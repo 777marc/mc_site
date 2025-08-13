@@ -8,11 +8,4 @@
 <p>Hello, {{ current_user.username }}!</p>
 {% else %}
 <p>Hello, Guest!</p>
-{% endif %}
-
-<a href="{{ url_for('login') }}">Login</a>
-<a href="{{ url_for('register') }}">Register</a>
-<a href="{{ url_for('people') }}">People</a>
-<a href="{{ url_for('logout') }}">Logout</a>
-
-{% endblock %}
+{% endif %} {% endblock %}

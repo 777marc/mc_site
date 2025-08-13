@@ -6,9 +6,19 @@
     <title>{% block title %}App{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
   </head>
-  <body>
-    <p>===========================</p>
-    {% block content %}{% endblock %}
+  <body style="padding: 25px">
+    <div class="content">{% block content %}{% endblock %}</div>
+    <footer>
+      {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      {% else %}
+      <a href="{{ url_for('people') }}">People</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
+      <p>&copy; My Flask App. All rights reserved.</p>
+    </footer>
+
     <script src="/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
