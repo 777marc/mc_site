@@ -2,40 +2,17 @@
 %}
 
 <h1>Index Page</h1>
-<p>{{ current_user.username if current_user.is_authenticated else "Guest" }}</p>
-<ul>
-  {% for person in people %}
-  <li>
-    {{ person }}
-    <button type="button" onclick="deletePerson('{{ person.pid }}')">
-      Delete
-    </button>
-    <a href="{{ url_for('person_details', pid=person.pid) }}">Details</a>
-  </li>
-  {% endfor %}
-</ul>
+<p>Welcome to the index page!</p>
 
-<h3>New Person</h3>
-<form method="POST" action="{{ url_for('add_person') }}">
-  <input type="text" name="name" placeholder="Enter name" required />
-  <input type="text" name="age" placeholder="Enter age" />
-  <input type="text" name="job" placeholder="Enter job" />
-  <button type="submit">create</button>
-</form>
+{% if current_user.is_authenticated %}
+<p>Hello, {{ current_user.username }}!</p>
+{% else %}
+<p>Hello, Guest!</p>
+{% endif %}
 
-<script type="text/javascript">
-  function deletePerson(pid) {
-    if (confirm("Are you sure you want to delete this person?")) {
-      fetch(`/delete/${pid}`, {
-        method: "DELETE",
-      }).then((response) => {
-        if (response.ok) {
-          location.reload();
-        } else {
-          alert("Error deleting person.");
-        }
-      });
-    }
-  }
-</script>
+<a href="{{ url_for('login') }}">Login</a>
+<a href="{{ url_for('register') }}">Register</a>
+<a href="{{ url_for('people') }}">People</a>
+<a href="{{ url_for('logout') }}">Logout</a>
+
 {% endblock %}

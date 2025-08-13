@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 
 from models import Person, User
@@ -8,8 +8,11 @@ def register_routes(app, db, bcrypt):
 
     @app.route('/')
     def index():
-        people = Person.query.all()
-        return render_template('index.html', people=people)
+        if current_user.is_authenticated:
+            print(f"Current user: {current_user.username}")
+            return render_template('index.html', current_user=current_user)
+
+        return render_template('index.html', current_user=None)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -18,9 +21,10 @@ def register_routes(app, db, bcrypt):
             password = request.form.get('password')
             user = User.query.filter_by(username=username).first()
             if user and bcrypt.check_password_hash(user.password, password):
-                print("User logged in:", user)
                 login_user(user)
-                return redirect('/')
+                print(f"User {user.username} logged in")
+                return redirect(url_for('index'))
+            
         return render_template('login.html')
 
     @app.route('/logout')
@@ -34,12 +38,20 @@ def register_routes(app, db, bcrypt):
         if request.method == 'POST':
             username = request.form.get('username')
             password = request.form.get('password')
+            role = 'user'
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            new_user = User(username=username, password=hashed_password)
+            new_user = User(username=username, password=hashed_password, role=role)
             db.session.add(new_user)
             db.session.commit()
             return redirect('/login')
+        
         return render_template('register.html')
+
+    @app.route('/people')
+    @login_required
+    def people():
+        people = Person.query.all()
+        return render_template('people.html', people=people)
 
     @app.route('/add', methods=['POST'])
     def add_person():
